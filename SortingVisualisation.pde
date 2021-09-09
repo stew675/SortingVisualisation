@@ -13,7 +13,7 @@ int[] values;
 Sorting[] states;
 String sortname;
 
-int style = 1;
+int style = 2;
 int drawing = 0;
 int sorted = 0;
 int no_draw = 1;
@@ -128,28 +128,28 @@ void draw() {
                 fill(0, 255, 0);
             }
 
+            int vk = floor(map(values[k], 0, values.length - 1, 0, height - 1));
+
             if (rainbow == 1 || style > 3) {
-                int hue = (int)(values[k] * 0.75);    // Only rainbow colors
+                int hue = (int)(vk * 0.75);    // Only rainbow colors
                 fill(hue, height, height);
             }
 
             // Bars
             if (style == 1)
-                rect(k * line_width, height-values[k], ceil(line_width), values[k]);
+                rect(k * line_width, height - vk, ceil(line_width), vk);
 
             // Dots
             if (style == 2)
-                rect(k * line_width, height-values[k], rds, rds);
+                rect(k * line_width, height - vk, rds, rds);
 
             // Spiral
             if (style == 3) {
-                amp = map(values[k], 0, height, 0, radius);
-                //amp = sqrt(amp);
+                amp = map(vk, 0, height - 1, 0, radius);
                 angle = k;
                 angle /= values.length;
                 angle = pow(angle, 0.33333);
                 angle *= radians(1080);
-                //angle = map((float)k, 0, values.length, 0, radians(1080));
                 x = cos(angle - HALF_PI) * amp;
                 y = sin(angle - HALF_PI) * amp;
                 rect(width/2 + x, height/2 + y, rds, rds);
@@ -158,7 +158,7 @@ void draw() {
             // Rainbow
             if (style == 4) {
                 noFill();
-                stroke((int)values[k] * 0.75, height, height);
+                stroke((int)(vk * 0.75), height, height);
                 strokeWeight(5);
                 // Map k to range of PI..TWO_PI
                 // Hue is already set according to the values
@@ -169,17 +169,17 @@ void draw() {
                 // Map values[k] to a radius from 0..height/2
                 // where if values[k] is in position, radius is height/2
                 // if out of position, radius equates to the distance from its sorted position
-                float target = values[k] - (k * height_step);
+                float target = vk - (k * height_step);
                 target = abs(target) / height;
                 target = 1.0 - (target * 1.9);
                 amp = target * radius;
-                line(width/2 + x * amp, height*0.7 + y * amp, (width/2 + x*amp*1.05), (height*0.7 + y*amp*1.05));
+                line(width/2 + x * amp, height * 0.7 + y * amp, (width/2 + x * amp * 1.05), (height*0.7 + y * amp * 1.05));
             }
 
             // Color Wheel
             if (style == 5) {
                 noFill();
-                stroke((int)values[k] * 0.75, height, height);
+                stroke((int)(vk * 0.75), height, height);
                 strokeWeight(7);
 
                 // Map k to range of 0..TWO_PI
@@ -191,7 +191,7 @@ void draw() {
                 // Map values[k] to a radius from 0..height*0.95
                 // where if values[k] is in position, radius is height*0.95
                 // if out of position, radius equates to the distance from its sorted position
-                float target = values[k] - (k * height_step);
+                float target = vk - (k * height_step);
                 target = abs(target) / height;
                 target = 1.0 - (target * 1.9);
                 amp = target * radius * 1.9;
@@ -212,32 +212,30 @@ void sort()
     int n = width;
 
     while (sorted == 0) {
+        tri_sort(n);
+        
+        cross_stitch(n);
         bubble_sort(n);
-
         cocktail_sort(n);
-
         odd_even_sort(n);
-
         weave_sort(n);
-
         selection_sort(n);
-
         insertion_sort(n);
-
         binary_insertion_sort(n);
+        binary_sort(n);
 
+        shrink_sort(n);
+        life_sort(n);
+        three_sort(n);
+        four_sort(n);
+        tri_sort(n);
         shell_sort(n);
-
         comb_sort(n);
-
         rattle_sort(n);
 
         quick_sort(n);
-
         merge_sort(n);
-
         mip_sort(n);
-
         heap_sort(n);
 
         n = n / 4;

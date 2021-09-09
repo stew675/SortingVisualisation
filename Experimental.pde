@@ -1,4 +1,238 @@
+void sort_one_plus_three(int[] A, int a, int b, int c, int d) {
+    if (cmp(A, c, a) < 0) {
+        swap(A, a, b);
+        swap(A, b, c);
+        if (cmp(A, d, c) < 0)
+            swap(A, c, d);
+    } else {
+        if (cmp(A, b, a) < 0)
+            swap(A, b, a);
+    }
+} // sort_one_plus_three
 
+
+void sort_three_plus_one(int[] A, int a, int b, int c, int d) {
+    // sort_two_plus_one(A, a, b, c);
+    if (cmp(A, d, b) < 0) {
+        swap(A, d, c);
+        swap(A, c, b);
+        if (cmp(A, b, a) < 0)
+            swap(A, b, a);
+    } else {
+        if (cmp(A, d, c) < 0)
+            swap(A, d, c);
+    }
+} // sort_three_plus_one
+
+void sort_two_pairs(int[] A, int p1, int p2, int p3, int p4) {
+    //
+} // sort_two_pairs
+
+void sort_two_plus_pair(int[] A, int p1, int p2, int p3, int p4) {
+    // p3 < p4
+    if (cmp(A, p2, p1) < 0) {
+        // p2 < p1, p3 < p4
+        if (cmp(A, p3, p2) < 0) {
+            // p3 < p2 < p1, p3 < p4
+            if (cmp(A, p4, p2) < 0) {
+                // p3 < p4 < p2 < p1
+                swap(A, p1, p3);
+                swap(A, p2, p4);
+                swap(A, p3, p4);
+            } else {
+                // p3 < p2 < p1, p2 < p4
+                if (cmp(A, p4, p1) < 0) {
+                    // p3 < p2 < p4 < p1
+                    swap(A, p1, p3);
+                    swap(A, p3, p4);
+                } else {
+                    // p3 < p2 < p1 < p4
+                    swap(A, p1, p3);
+                }
+            }
+        } else {
+            // p2 < p1, p2 < p3 < p4
+            if (cmp(A, p3, p1) < 0) {
+                // p2 < p3 < p4, p3 < p1
+                if (cmp(A, p4, p1) < 0) {
+                    // p2 < p3 < p4 < p1
+                    swap(A, p1, p2);
+                    swap(A, p2, p3);
+                    swap(A, p3, p4);
+                } else {
+                    // p2 < p3 < p1 < p4
+                    swap(A, p1, p2);
+                    swap(A, p2, p3);
+                }
+            } else {
+                // p2 < p1 < p3 < p4
+                swap(A, p1, p2);
+            }
+        }
+    } else {
+        // p1 < p2, p3 < p4
+        if (cmp(A, p3, p1) < 0) {
+            // p3 < p1 < p2, p3 < p4
+            if (cmp(A, p4, p1) < 0) {
+                // p3 < p4 < p1 < p2
+                swap(A, p1, p3);
+                swap(A, p2, p4);
+            } else {
+                // p3 < p1 < p2, p1 < p4
+                if (cmp(A, p4, p2) < 0) {
+                    // p3 < p1 < p4 < p2
+                    swap(A, p1, p3);
+                    swap(A, p2, p3);
+                    swap(A, p3, p4);
+                } else {
+                    // p3 < p1 < p2 < p4
+                    swap(A, p1, p3);
+                    swap(A, p2, p3);
+                }
+            }
+        } else {
+            // p1 < p3 < p4, p1 < p2
+            if (cmp(A, p3, p2) < 0) {
+                // p1 < p3 < p4, p3 < p2
+                if (cmp(A, p4, p2) < 0) {
+                    // p1 < p3 < p4 < p2
+                    swap(A, p2, p3);
+                    swap(A, p3, p4);
+                } else {
+                    // p1 < p3 < p2 < p4
+                    swap(A, p2, p3);
+                }
+            } else {
+                // p1 < p2 < p3 < p4
+                // Already Sorted
+            }
+        }
+    }
+} // sort_two_plus_pair
+
+
+void sort_pair_plus_two(int[] A, int p1, int p2, int p3, int p4) {
+    sort_four(A, p1, p2, p3, p4);
+    return;
+    // p1 < p2
+    // if (cmp(A, p4, p3) < 0) {
+    // p1 < p2, p4 < p3
+    // } else {
+    // p1 < p2, p3 < p4
+    // }
+} // sort_pair_plus_two
+
+
+void four_sort(int n) {
+    long delay = (long)(34000000000L / (n * log(n)));  // O(n.logn) algorithm
+    int[] a = sorting_start(n, "Four Sort", delay);
+    float nn = n / 4.0, factor = 1.69;
+
+    for (int step = floor(nn); step > 1; nn /= factor, step = floor(nn)) {
+        for (int h = 0; h < step; h++)
+            for (int i = h, j = i + step, k = j + step, l = k + step; l < n; i = l, j = l + step, k = j + step, l = k + step)
+                tune_four(a, i, j, k, l);
+
+        nn /= factor;
+        step = floor(nn);
+        if (step < 2)
+            break;
+
+        for (int h = n - 1, stop = h - step; h > stop; h--)
+            for (int l = h, k = l - step, j = k - step, i = j - step; i >= 0; l = i, k = i - step, j = k - step, i = j - step)
+                tune_four(a, i, j, k, l);
+    }
+
+    insertion_sort_section(a, 0, n);
+    print_stats();
+    sorting_done();
+} // four_sort
+
+
+void sort_one_plus_two(int[] A, int a, int b, int c) {
+    if (cmp(A, b, a) < 0) {
+        swap(A, b, a);
+        if (cmp(A, c, b) < 0)
+            swap(A, c, b);
+    }
+} // sort_one_plus_two
+
+
+void sort_two_plus_one(int[] A, int a, int b, int c) {
+    if (cmp(A, c, b) < 0) {
+        swap(A, b, c);
+        if (cmp(A, b, a) < 0)
+            swap(A, a, b);
+    }
+} // sort_two_plus_one
+
+
+void three_sort(int n) {
+    long delay = (long)(34000000000L / (n * log(n)));  // O(n.logn) algorithm
+    int[] a = sorting_start(n, "Three Sort", delay);
+    int max = 5;
+    float factor = 1.87;
+
+    for (int step = n / max; step > 0; step = floor(step / factor))
+        for (int d=0, b=step; b<n; b++, d=b-step)
+            for (int c=b, i=0; i<max && d>=0 && cmp(a, c, d) < 0; i++, c=d, d-=step)
+                swap(a, c, d);
+
+    //int i, j, k, stop, e = n - 1;
+    //for (int step = n / 3; step > 1; step = floor(step / factor)) {
+    //    for (i = 0, j = step; i < step; i++, j++)
+    //        if (cmp(a, j, i) < 0)
+    //            swap(a, i, j);
+
+    //    for (j = step, k = step+step; k < n; j++, k++)
+    //        if (cmp(a, k, j) < 0) {
+    //            swap(a, j, k);
+    //            if (cmp(a, j, j-step) < 0)
+    //                swap(a, j-step, j);
+    //        }
+
+    //    if ((step = floor(step / factor)) < 2)
+    //        break;
+
+    //    for (k = e, j = e - step, stop = e - step; k > stop; j--, k--)
+    //        if (cmp(a, k, j) < 0)
+    //            swap(a, j, k);
+
+    //    for (j=e-step, i=e-step*2, stop=step-1; j>stop; i--, j--)
+    //        if (cmp(a, j, i) < 0) {
+    //            swap (a, i, j);
+    //            if (cmp(a, j+step, j) < 0)
+    //                swap(a, j, j+step);
+    //        }
+    //}
+
+    insertion_sort_section(a, 0, n);
+    println(cmps, swaps, cmps + swaps * 2, factor);
+    sorting_done();
+} // three_sort
+
+//void three_sort(int n) {
+//    for (int factor = 1300; factor <= 2000; factor+=10)
+//        three_sortt(n, (factor / 1000.0));
+//    exit();
+//} // three_sort
+
+void weave(int[] A, int al, int am, int ah, int bl, int bm, int bh, int cl, int cm, int ch)
+{
+    sort_three(A, al, am, ah);
+    sort_three(A, bl, bm, bh);
+    sort_three(A, cl, cm, ch);
+
+    sort_three(A, ah, bh, ch);
+    sort_three(A, am, bm, cm);
+    sort_three(A, al, bl, cl);  // ch now greatest, al now least
+
+    sort_three(A, am, bl, cl);  // am now 2nd least
+    sort_three(A, ah, bh, cm);  // cm now 2nd greatest
+    sort_three(A, bm, bh, cl);  // cl now 3rd greatest
+    sort_three(A, ah, bl, bm);  // ah now 3rd least
+    sort_three(A, bl, bm, bh);  // Fully Sorted now
+} // weave
 
 void three_group(int[] a, int s, int n)
 {

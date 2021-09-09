@@ -83,6 +83,7 @@ void quick_sort(int n)
 
     quick_sort_sub(a, 0, n-1);
     sorting_done();
+    println(cmps, swaps);
 } // quick_sort
 
 void comb_sort(int n)
@@ -101,6 +102,7 @@ void comb_sort(int n)
             swap(a, b, s);
 
     sorting_done();
+    println(cmps, swaps);
 } // comb_sort
 
 void rattle_sort(int n)
@@ -137,6 +139,7 @@ void rattle_sort(int n)
 
     insertion_sort_section(a, 0, n);
     sorting_done();
+    println(cmps, swaps);
 } // rattle_sort
 
 void shell_sort(int n)
@@ -153,4 +156,104 @@ void shell_sort(int n)
                 swap(a, c, d);
 
     sorting_done();
+    println(cmps, swaps);
 } // shell_sort
+
+void shrink_sub(int[] a, int s, int e)
+{
+    int b, swapped = 1;
+    int stop = (s + e) / 2;
+    float factor = 0.71;
+
+    if (e - s < 10) {
+        insertion_sort_section(a, s, e);
+        return;
+    }
+    
+    for (float mult = factor; floor((e - s) * mult) > 3 && swapped == 1; mult *= factor) {
+        swapped = 0;
+        for (int i = s; i < stop; i++) {
+            b = i + 1 + floor((e - i) * mult);
+            if (cmp(a, b, i) < 0) {
+                swapped = 1;
+                swap(a, i, b);
+            }
+        }
+
+        for (int i = e - 1; i >= stop; i--) {
+            b = i - 1 - floor((i - s) * mult);
+            if (cmp(a, i, b) < 0) {
+                swapped = 1;
+                swap(a, i, b);
+            }
+        }
+    }
+} // shrink_sub
+
+void shrink_sort(int n)
+{
+    long delay = (long)(29000000000L / (n * log(n)));  // O(n.logn) algorithm
+    int[] a = sorting_start(n, "Shrink Sort", delay);
+
+    shrink_sub(a, 0, n);
+
+    insertion_sort_section(a, 0, n);
+
+    sorting_done();
+} // shrink_sort
+
+void cross_stitch(int n)
+{
+    long delay = (long)(25500000000L / (n * log(n)));  // O(n.logn) algorithm
+    int[] a = sorting_start(n, "Cross Stitch Sort", delay);
+    float factor = 1.6666;
+    int nmt = n - 2;
+
+    for (int gap = floor(n/factor); gap > 1; gap = floor(gap/factor)) {
+        int stop = n - gap;
+
+        for (int i=0; i<stop; i++)
+            if (cmp(a, i+gap, i) < 0)
+                swap(a, i, i+gap);
+
+        stop = gap - 1;
+        for (int i = n - gap - 1; i > stop; i--)
+            if (cmp(a, i, i-gap) < 0)
+                swap(a, i, i-gap);
+    }
+
+    insertion_sort_section(a, 0, n);
+    sorting_done();
+} // cross_stitch
+
+final int[] boff = {0, 1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19583};
+    
+void bin_sort_sub(int[] a, int n) {
+    for (int min = 9; min >= 0; min-=3) {
+        if (boff[min+1] > n/2)
+            continue;
+
+        int stop = n - boff[min];
+
+        for (int i = 0; i < stop; i++) {
+            for (int o = min+1; o < boff.length && o < min+6 && (i + boff[o]) < n; o++)
+                for (int oi = o; oi > min && cmp(a, i+boff[oi], i+boff[oi-1]) < 0; oi--)
+                    swap(a, i+boff[oi], i+boff[oi-1]);
+
+            for (int o = min+1, ii=n-i-1; o < boff.length && o < min+6 && (ii - boff[o]) >= 0; o++)
+                for (int oi = o; oi > min && cmp(a, ii-boff[oi-1], ii-boff[oi]) < 0; oi--)
+                    swap(a, ii-boff[oi], ii-boff[oi-1]);
+        }
+    }
+} // bin_sort_sub
+
+void binary_sort(int n) {
+    long delay = (long)(16500000000L / (n * log(n)));  // O(n.logn) algorithm
+    int[] a = sorting_start(n, "Binary Sort", delay);
+
+    bin_sort_sub(a, n);
+
+    insertion_sort_section(a, 0, n);
+
+    sorting_done();
+} // binary_sort

@@ -1,35 +1,4 @@
-void sort_three(int[] A, int a, int b, int c)
-{
-    if (cmp(A, a, b) <= 0) {
-        if (cmp(A, b, c) <= 0) {
-            // a, b, c
-            return;
-        } else if (cmp(A, a, c) <= 0) {
-            // a, c, b
-            swap(A, b, c);
-        } else {
-            // c, a, b
-            swap(A, a, c);
-            swap(A, b, c);
-        }
-    } else {
-        if (cmp(A, b, c) <= 0) {
-            if (cmp(A, a, c) <= 0) {
-                // b, a, c
-                swap(A, a, b);
-            } else {
-                // b, c, a
-                swap(A, a, b);
-                swap(A, b, c);
-            }
-        } else {
-            // c, b, a
-            swap(A, a, c);
-        }
-    }
-} // sort_three
-
-void weave(int[] A, int al, int am, int ah, int bl, int bm, int bh, int cl, int cm, int ch)
+void part_weave(int[] A, int al, int am, int ah, int bl, int bm, int bh, int cl, int cm, int ch)
 {
     //sort_three(A, al, am, ah);
     //sort_three(A, bl, bm, bh);
@@ -44,7 +13,7 @@ void weave(int[] A, int al, int am, int ah, int bl, int bm, int bh, int cl, int 
     sort_three(A, bm, bh, cl);  // cl now 3rd greatest
     sort_three(A, ah, bl, bm);  // ah now 3rd least
     sort_three(A, bl, bm, bh);  // Fully Sorted now
-} // weave
+} // part_weave
 
 void weave_sort(int n)
 {
@@ -63,14 +32,14 @@ void weave_sort(int n)
     sort_three(a, 3, 4, 5);
     while (e > stop) {
         for (i = 0; i+8 < e; i+=6)
-            weave(a, i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8);
+            part_weave(a, i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8);
 
         i = e - 9;
         sort_three(a, i+3, i+4, i+5);
-        weave(a, i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8);
+        part_weave(a, i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8);
         e -= 3;
     }
-    weave(a, 0, 1, 2, 3, 4, 5, 6, 7, 8);
+    part_weave(a, 0, 1, 2, 3, 4, 5, 6, 7, 8);
     sorting_done();
 } // weave_sort
 
